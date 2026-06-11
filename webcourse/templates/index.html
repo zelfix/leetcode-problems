@@ -1,0 +1,34 @@
+{{define "index.html"}}{{template "header" "Plan"}}
+<section class="hero">
+  <h1>NeetCode 250 — Study Plan</h1>
+  <div class="progress">
+    <div class="bar"><div class="fill" style="width: {{printf "%.1f" .Percent}}%"></div></div>
+    <span class="progress-label">{{.Stats.Solved}} / {{.Stats.Total}} solved ({{printf "%.0f" .Percent}}%)</span>
+  </div>
+  <div class="diffstats">
+    {{range $d, $v := .Stats.ByDiff}}<span class="diffstat diff-{{lower $d}}">{{$d}}: {{index $v 0}}/{{index $v 1}}</span>{{end}}
+  </div>
+</section>
+
+<section class="days">
+{{range .Days}}
+  <article class="day{{if eq .Date $.Today}} today{{end}}">
+    <div class="day-head">
+      <a href="/day/{{.Day}}"><strong>Day {{.Day}}</strong></a>
+      <span class="date">{{.Date}}{{if eq .Date $.Today}} · today{{end}}</span>
+      <span class="topic">{{.Topic}}</span>
+    </div>
+    <ul class="problems">
+      {{range .Problems}}
+      <li>
+        {{template "statusicon" .Status}}
+        {{template "badge" .Difficulty}}
+        <a href="/problem/{{.Slug}}">{{.Title}}</a>
+        {{if not .HasData}}<span class="nodata" title="premium / not in dataset">🔒</span>{{end}}
+      </li>
+      {{end}}
+    </ul>
+  </article>
+{{end}}
+</section>
+{{template "footer"}}{{end}}

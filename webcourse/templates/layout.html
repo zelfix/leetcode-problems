@@ -1,0 +1,26 @@
+{{define "header"}}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.}} · NeetCode 250</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">📚 NeetCode 250</a>
+  <nav><a href="/">Plan</a></nav>
+</header>
+<main>
+{{end}}
+
+{{define "footer"}}
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
+{{end}}
+
+{{define "badge"}}<span class="badge diff-{{lower .}}">{{.}}</span>{{end}}
+
+{{define "statusicon"}}{{if eq . "solved"}}<span class="st solved" title="solved">✅</span>{{else if eq . "attempted"}}<span class="st attempted" title="attempted">🔄</span>{{else}}<span class="st todo" title="not started">⬜</span>{{end}}{{end}}

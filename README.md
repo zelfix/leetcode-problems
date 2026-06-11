@@ -1,6 +1,48 @@
-# LeetCode Problems — JSON Dataset
+# LeetCode Problems — JSON Dataset & Local Study Course
 
-This repository provides a dataset of LeetCode problems in JSON format. Each problem is saved as a separate `.json` file within the `problems/` directory, and all problems are also combined in a single `merged_problems.json` file for easy access.
+This repository provides a dataset of LeetCode problems in JSON format **and** a self-contained local study tool built on top of it for grinding the [NeetCode 250](NeetCode_250_Study_Plan_2026-06-15.md) plan in Go.
+
+- **Dataset** — every problem as a separate `.json` file in `problems/`, plus a merged `merged_problems.json`. (Schema documented [below](#dataset-structure).)
+- **Study course** (`webcourse/`) — a Go CLI + web server that scaffolds, compile-checks, and tracks your Go solutions, backed by a local SQLite DB.
+- **Claude coach** (`.claude/skills/neetcode-coach/`) — a Socratic coaching skill for Claude Code that nudges you through each problem without spoiling the answer.
+
+## Quick Start — Local Study Course
+
+**Prerequisites:** [Go](https://go.dev/dl/) **1.26+** (the only toolchain you need; the SQLite driver is cgo-free, so no C compiler is required).
+
+```bash
+# 1. Clone and enter the repo
+git clone git@github.com:zelfix/leetcode-problems.git
+cd leetcode-problems
+
+# 2. Build the CLI (run from webcourse/)
+cd webcourse
+go build -o neet .
+
+# 3. Seed the local database from the plan + problems/ dataset (250 problems)
+./neet seed
+```
+
+That's it. The database (`webcourse/course.db`) and the `neet` binary are **generated locally** and are intentionally git-ignored — a fresh clone never ships them, you build and seed your own. This keeps your personal progress off the shared repo.
+
+### Daily workflow
+
+```bash
+./neet today              # show today's (or next) plan problems
+./neet new two-sum        # scaffold solutions/two-sum.go from the Go starter
+#   ...solve it in your editor...
+./neet submit two-sum     # save to DB, mark solved, compile-check
+./neet status             # overall progress
+./neet serve              # browse the plan & track progress at http://localhost:8080
+```
+
+The tool auto-detects the repo root (the directory containing `merged_problems.json`), so you can run `neet` from the repo root or from `webcourse/`. Your solutions live in `solutions/<slug>.go` and **are** tracked in git, so you can commit your work; the DB and binary are not.
+
+### The Claude coach skill
+
+`.claude/skills/neetcode-coach/SKILL.md` turns Claude Code into a patient, Socratic coach. It reads the problem's hints/editorial and your current `solutions/<slug>.go`, then guides you one step at a time, only revealing the full solution if you explicitly ask. Trigger it in Claude Code with `/neetcode-coach <slug>` (or just *"coach me on two-sum"* while editing a solution file).
+
+For the full command reference and how `submit`'s compile-check works, see [`webcourse/README.md`](webcourse/README.md).
 
 ## Dataset Structure
 

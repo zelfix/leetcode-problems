@@ -1,0 +1,92 @@
+{{define "problem.html"}}{{template "header" .Problem.Title}}
+{{with .Problem}}
+<article class="problem">
+  <div class="crumbs"><a href="/">Plan</a>{{if $.Day}} › <a href="/day/{{$.Day}}">Day {{$.Day}} ({{$.Date}})</a>{{end}}</div>
+
+  <h1>{{if .FrontendID}}{{.FrontendID}}. {{end}}{{.Title}}</h1>
+  <div class="meta">
+    {{template "statusicon" .Status}}
+    {{template "badge" .Difficulty}}
+    <span class="topic">{{.Topic}}</span>
+    <a class="ext" href="{{.URL}}" target="_blank" rel="noopener">LeetCode ↗</a>
+    {{if .SolvedAt}}<span class="solved-at">solved {{shortTime .SolvedAt}}</span>{{end}}
+  </div>
+
+  {{if not .HasData}}
+  <p class="warn">🔒 This problem is premium / not present in the local dataset. Only plan metadata is shown. Use the LeetCode link above.</p>
+  {{end}}
+
+  {{if .Description}}
+  <section class="block">
+    <h2>Description</h2>
+    <div class="prose">{{nl2br .Description}}</div>
+  </section>
+  {{end}}
+
+  {{if .Examples}}
+  <section class="block">
+    <h2>Examples</h2>
+    {{range .Examples}}<pre class="example">{{.Text}}</pre>{{end}}
+  </section>
+  {{end}}
+
+  {{if .Constraints}}
+  <section class="block">
+    <h2>Constraints</h2>
+    <ul class="constraints">{{range .Constraints}}<li>{{html .}}</li>{{end}}</ul>
+  </section>
+  {{end}}
+
+  {{if .FollowUps}}
+  <section class="block">
+    <h2>Follow-ups</h2>
+    <ul>{{range .FollowUps}}<li>{{html .}}</li>{{end}}</ul>
+  </section>
+  {{end}}
+
+  {{if .Hints}}
+  <section class="block">
+    <h2>Hints <small>({{len .Hints}}) — reveal one at a time</small></h2>
+    {{range $i, $h := .Hints}}
+    <details class="hint"><summary>Hint {{add1 $i}}</summary><div class="prose">{{html $h}}</div></details>
+    {{end}}
+  </section>
+  {{end}}
+
+  {{if .GoSnippet}}
+  <section class="block">
+    <h2>Go starter</h2>
+    <p class="cli-hint">Scaffold &amp; submit from the terminal:
+      <code>neet new {{.Slug}}</code> → edit <code>solutions/{{.Slug}}.go</code> → <code>neet submit {{.Slug}}</code></p>
+    <pre class="code"><code>{{.GoSnippet}}</code></pre>
+  </section>
+  {{end}}
+
+  {{if .Solution}}
+  <section class="block">
+    <h2>Editorial solution</h2>
+    <details class="solution"><summary>Show official solution (spoiler)</summary><pre class="prose">{{.Solution}}</pre></details>
+  </section>
+  {{end}}
+</article>
+{{end}}
+
+<section class="block submissions">
+  <h2>Your submissions ({{len .Submissions}})</h2>
+  {{if not .Submissions}}
+  <p class="muted">No submissions yet. Run <code>neet submit {{.Problem.Slug}}</code> after writing your solution.</p>
+  {{else}}
+  {{range .Submissions}}
+  <details class="submission">
+    <summary>
+      {{if .CompileOK}}<span class="ok">✅ compiled</span>{{else}}<span class="fail">⚠️ compile error</span>{{end}}
+      <span class="ts">{{shortTime .CreatedAt}}</span>
+      <span class="muted">#{{.ID}}</span>
+    </summary>
+    {{if not .CompileOK}}<pre class="compile-out">{{.CompileOutput}}</pre>{{end}}
+    <pre class="code"><code>{{.Code}}</code></pre>
+  </details>
+  {{end}}
+  {{end}}
+</section>
+{{template "footer"}}{{end}}

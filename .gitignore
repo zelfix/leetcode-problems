@@ -1,0 +1,13 @@
+# NeetCode course local artifacts (generated locally, not shared)
+webcourse/course.db
+webcourse/course.db-journal
+webcourse/course.db-wal
+webcourse/course.db-shm
+webcourse/neet
+/neet
+
+# IDE
+.idea/
+
+# Claude local settings (keep the skill, ignore local prefs)
+.claude/settings.local.json

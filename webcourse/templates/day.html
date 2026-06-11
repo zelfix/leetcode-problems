@@ -1,0 +1,17 @@
+{{define "day.html"}}{{template "header" "Day"}}
+<article class="problem">
+  <div class="crumbs"><a href="/">Plan</a> › Day {{.Day}}</div>
+  <h1>Day {{.Day}}{{if .Date}} — {{.Date}}{{end}}</h1>
+  <div class="meta"><span class="topic">{{.Topic}}</span></div>
+  <ul class="problems big">
+    {{range .Problems}}
+    <li>
+      {{template "statusicon" .Status}}
+      {{template "badge" .Difficulty}}
+      <a href="/problem/{{.Slug}}">{{.Title}}</a>
+      {{if not .HasData}}<span class="nodata" title="premium / not in dataset">🔒</span>{{end}}
+    </li>
+    {{end}}
+  </ul>
+</article>
+{{template "footer"}}{{end}}
