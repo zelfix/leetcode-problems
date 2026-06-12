@@ -33,6 +33,29 @@ ls problems | grep -i '<slug>\.json$'
 
 Note: most problems have **no** stored hints and **no** editorial (only ~89/250 have hints, ~58 have solutions). When they're missing, coach from the `description` + `topics` and standard patterns — do not say "I have no hints," just guide.
 
+## Step 2.5 — Auto-watch the solution file
+As soon as the slug is resolved, **automatically** start a background `Monitor` on `solutions/<slug>.go` so you react the moment the user saves — they shouldn't have to ask or ping you. Tell them briefly (in Russian) that you're watching the file. Use this command (substitute the real absolute path):
+
+```bash
+F=/Users/aprotsenko/git/leetcode-problems/solutions/<slug>.go
+prev=$(md5 -q "$F" 2>/dev/null)
+while true; do
+  cur=$(md5 -q "$F" 2>/dev/null)
+  if [ "$cur" != "$prev" ]; then
+    echo "file changed at $(date +%H:%M:%S)"
+    prev=$cur
+  fi
+  sleep 2
+done
+```
+
+Set `description` to `changes to <slug>.go`, `persistent: false`, and a long `timeout_ms` (e.g. 3600000). On each change event, re-Read the file and give Socratic feedback on what changed (don't dump the whole file back).
+
+Notes:
+- `md5 -q` is the macOS form (this repo is on darwin). The monitor stays armed for the whole coaching session.
+- Don't start a second monitor if one is already running for this slug. If the user switches to a different problem, `TaskStop` the old monitor and start one for the new slug.
+- `TaskStop` the monitor once the problem is solved/submitted and the user moves on, or if they ask you to stop watching.
+
 ## Step 3 — Coach Socratically
 Run the conversation as escalating nudges. Stay at the lowest level that unblocks them.
 
